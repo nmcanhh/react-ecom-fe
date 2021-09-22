@@ -12,6 +12,7 @@ import Home from "./components/frontend/Home";
 import Register from "./components/frontend/auth/Register";
 import Login from "./components/frontend/auth/Login";
 import axios from "axios";
+import AdminPrivateRoute from "./routes/AdminPrivateRoute";
 
 axios.defaults.baseURL = "http://reactecom.test/";
 axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -48,11 +49,12 @@ function App() {
               <Register />
             )}
           </Route>
-          <Route
+          {/* <Route
             path="/admin"
             name="Admin"
             render={(props) => <MasterLayout {...props} />}
-          />
+          /> */}
+          <AdminPrivateRoute path="/admin" name="admin" />
         </Switch>
       </Router>
     </div>
