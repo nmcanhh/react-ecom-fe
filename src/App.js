@@ -13,6 +13,8 @@ import Register from "./components/frontend/auth/Register";
 import Login from "./components/frontend/auth/Login";
 import axios from "axios";
 import AdminPrivateRoute from "./routes/AdminPrivateRoute";
+import Page403 from "./components/errors/Page403";
+import Page404 from "./components/errors/Page404";
 
 axios.defaults.baseURL = "http://reactecom.test/";
 axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -32,6 +34,8 @@ function App() {
       <Router>
         <Switch>
           <Route exact path="/" component={Home} />
+          <Route exact path="/403" component={Page403} />
+          <Route exact path="/404" component={Page404} />
 
           {/* <Route path="/login" component={Login} />
           <Route path="/register" component={Register} /> */}
