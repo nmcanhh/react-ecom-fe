@@ -20,7 +20,11 @@ const Login = () => {
                   </div>
                   <div className="form-group mb-3">
                     <label htmlFor="">Password</label>
-                    <input type="password" class="form-control" id="password" />
+                    <input
+                      type="password"
+                      className="form-control"
+                      id="password"
+                    />
                   </div>
                   <div className="form-group mb-3">
                     <button type="submit" className="btn btn-primary">
