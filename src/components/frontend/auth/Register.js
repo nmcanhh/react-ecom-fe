@@ -28,16 +28,16 @@ const Register = () => {
     };
 
     axios.get("/sanctum/csrf-cookie").then((response) => {
-      axios.post(`api/register`, data).then((response) => {
-        if (response.data.status === "200") {
-          localStorage.setItem("auth_token", response.data.token);
-          localStorage.setItem("auth_name", response.data.username);
-          swal("Success", response.data.message, "success");
+      axios.post(`api/register`, data).then((res) => {
+        if (res.data.status === 200) {
+          localStorage.setItem("auth_token", res.data.token);
+          localStorage.setItem("auth_name", res.data.username);
+          swal("Success", res.data.message, "success");
           history.push("/");
         } else {
           setRegisterInput({
             ...registerInput,
-            error_list: response.data.validation_errors,
+            error_list: res.data.validation_errors,
           });
         }
       });

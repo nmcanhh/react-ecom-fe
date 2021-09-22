@@ -1,7 +1,48 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../../../layouts/frontend/Navbar";
+import axios from "axios";
+import swal from "sweetalert";
+import { useHistory } from "react-router-dom";
 
 const Login = () => {
+  const history = useHistory();
+  const [loginInput, setLoginInput] = useState({
+    email: "",
+    password: "",
+    error_list: [],
+  });
+  const handleInput = (e) => {
+    e.persist = () => {};
+    setLoginInput({ ...loginInput, [e.target.name]: e.target.value });
+  };
+
+  const loginSubmit = (e) => {
+    e.preventDefault();
+
+    const data = {
+      email: loginInput.email,
+      password: loginInput.password,
+    };
+
+    axios.get("/sanctum/csrf-cookie").then((response) => {
+      axios.post(`api/login`, data).then((res) => {
+        if (res.data.status === 200) {
+          localStorage.setItem("auth_token", res.data.token);
+          localStorage.setItem("auth_name", res.data.username);
+          swal("Success", res.data.message, "success");
+          history.push("/");
+        } else if (res.data.status == 401) {
+          swal("Warning", res.data.message, "warning");
+        } else {
+          setLoginInput({
+            ...loginInput,
+            error_list: res.data.validation_errors,
+          });
+        }
+      });
+    });
+  };
+
   return (
     <div>
       <Navbar />
@@ -13,18 +54,28 @@ const Login = () => {
                 <h4>Login</h4>
               </div>
               <div className="card-body">
-                <form>
+                <form onSubmit={loginSubmit}>
                   <div className="form-group mb-3">
                     <label htmlFor="">Email ID</label>
-                    <input type="email" className="form-control" id="email" />
+                    <input
+                      type="email"
+                      className="form-control"
+                      name="email"
+                      onChange={handleInput}
+                      value={loginInput.email}
+                    />
+                    <span>{loginInput.error_list?.email}</span>
                   </div>
                   <div className="form-group mb-3">
                     <label htmlFor="">Password</label>
                     <input
                       type="password"
                       className="form-control"
-                      id="password"
+                      name="password"
+                      onChange={handleInput}
+                      value={loginInput.password}
                     />
+                    <span>{loginInput.error_list?.password}</span>
                   </div>
                   <div className="form-group mb-3">
                     <button type="submit" className="btn btn-primary">
