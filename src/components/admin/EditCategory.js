@@ -1,60 +1,58 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import swal from "sweetalert";
 import { useHistory } from "react-router-dom";
 
-const Category = () => {
-  const [categoryInput, setCategoryInput] = useState({
-    slug: "",
-    name: "",
-    description: "",
-    status: "",
-    meta_title: "",
-    meta_keyword: "",
-    meta_descrip: "",
-    error_list: [],
-  });
+const EditCategory = (props) => {
+  const history = useHistory();
+  const [loading, setLoading] = useState(true);
+  const [categoryInput, setCategoryInput] = useState([]);
+  const [error, setError] = useState([]);
+
   const handleInput = (e) => {
     e.persist = () => {};
     setCategoryInput({ ...categoryInput, [e.target.name]: e.target.value });
   };
-  const submitCategory = (e) => {
+
+  useEffect(() => {
+    const category_id = props.match.params.id;
+    axios.get(`/api/edit-category/${category_id}`).then((res) => {
+      if (res.data.status === 200) {
+        setCategoryInput(res.data.category);
+      } else if (res.data.status === 404) {
+        swal("Error", res.data.message, "error");
+        history.push("/admin/view-category");
+      }
+      setLoading(false);
+    });
+  }, [props.match.params.id, history]);
+
+  const updateCategory = (e) => {
     e.preventDefault();
-    const data = {
-      slug: categoryInput.slug,
-      name: categoryInput.name,
-      description: categoryInput.description,
-      status: categoryInput.status,
-      meta_title: categoryInput.meta_title,
-      meta_keyword: categoryInput.meta_keyword,
-      meta_descrip: categoryInput.meta_descrip,
-    };
-    axios.post("/api/store-category", data).then((res) => {
+    const category_id = props.match.params.id;
+    const data = categoryInput;
+    axios.put(`/api/update-category/${category_id}`, data).then((res) => {
       if (res.data.status === 200) {
         swal("Success", res.data.message, "success");
-        document.getElementById("CATEGORY_FORM").reset();
-      } else if (res.data.status === 400) {
-        setCategoryInput({ ...categoryInput, error_list: res.data.errors });
+        setError([]);
+      } else if (res.data.status === 422) {
+        swal("All field are mandetory", "", "error");
+        setError(res.data.errors);
+      } else if (res.data.status === 404) {
+        swal("Error", res.data.message, "error");
+        history.push("/admin/view-category");
       }
+      setLoading(false);
     });
   };
 
-  var display_errors = [];
-  if (categoryInput.error_list) {
-    display_errors = [
-      categoryInput.error_list.slug,
-      categoryInput.error_list.name,
-      categoryInput.error_list.meta_title,
-    ];
+  if (loading) {
+    return <h4>Loading Edit Category...</h4>;
   }
 
   return (
     <div className="container-fluid px-4">
-      <h1 className="mt-4">Category</h1>
-      {display_errors.map((item) => {
-        return <p className="mb-1">{item}</p>;
-      })}
-      <form onSubmit={submitCategory} id="CATEGORY_FORM">
+      <form onSubmit={updateCategory}>
         <ul className="nav nav-tabs" id="myTab" role="tablist">
           <li className="nav-item" role="presentation">
             <button
@@ -101,6 +99,7 @@ const Category = () => {
                 value={categoryInput.slug}
                 className="form-control"
               />
+              <small className="text-danger">{error.slug}</small>
             </div>
             <div className="form-group mb-3">
               <label>Name</label>
@@ -111,6 +110,7 @@ const Category = () => {
                 value={categoryInput.name}
                 className="form-control"
               />
+              <small className="text-danger">{error.name}</small>
             </div>
             <div className="form-group mb-3">
               <label>Description</label>
@@ -147,6 +147,7 @@ const Category = () => {
                 value={categoryInput.meta_title}
                 className="form-control"
               />
+              <small className="text-danger">{error.meta_title}</small>
             </div>
             <div className="form-group mb-3">
               <label>Meta Keywords</label>
@@ -169,11 +170,11 @@ const Category = () => {
           </div>
         </div>
         <button type="submit" className="btn btn-primary px-4 float-end ">
-          Add
+          Update
         </button>
       </form>
     </div>
   );
 };
 
-export default Category;
+export default EditCategory;
