@@ -16,6 +16,22 @@ const ViewCategory = () => {
     });
   }, []);
 
+  const deleteCategory = (e, id) => {
+    e.preventDefault();
+    const thisClicked = e.currentTarget;
+    thisClicked.innerText = "Deleting";
+
+    axios.delete(`/api/delete-category/${id}`).then((res) => {
+      if (res.data.status === 200) {
+        swal("Success", res.data.message, "success");
+        thisClicked.closest("tr").remove();
+      } else if (res.data.status === 404) {
+        swal("Success", res.data.message, "success");
+        thisClicked.innerText = "Delete";
+      }
+    });
+  };
+
   var viewCategory_HTMLTable = "";
 
   if (loading) {
@@ -39,7 +55,7 @@ const ViewCategory = () => {
           <td>
             <button
               type="button"
-              to={`delete-category/${item.id}`}
+              onClick={(e) => deleteCategory(e, item.id)}
               className="btn btn-danger btn-sm"
             >
               Delete
