@@ -1,4 +1,6 @@
 import Dashboard from "../components/admin/Dashboard";
+import Category from "../components/admin/Category";
+
 import Profile from "../components/admin/Profile";
 
 const routes = [
@@ -13,6 +15,13 @@ const routes = [
     name: "Dashboard",
     component: Dashboard,
   },
+  {
+    path: "/admin/add-category",
+    exact: true,
+    name: "Category",
+    component: Category,
+  },
+
   {
     path: "/admin/profile",
     exact: true,

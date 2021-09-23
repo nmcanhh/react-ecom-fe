@@ -35,7 +35,7 @@ const Login = () => {
           } else {
             history.push("/");
           }
-        } else if (res.data.status == 401) {
+        } else if (res.data.status === 401) {
           swal("Warning", res.data.message, "warning");
         } else {
           setLoginInput({
