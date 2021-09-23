@@ -1,6 +1,6 @@
 import Dashboard from "../components/admin/Dashboard";
 import Category from "../components/admin/Category";
-
+import ViewCategory from "../components/admin/ViewCategory";
 import Profile from "../components/admin/Profile";
 
 const routes = [
@@ -20,6 +20,12 @@ const routes = [
     exact: true,
     name: "Category",
     component: Category,
+  },
+  {
+    path: "/admin/view-category",
+    exact: true,
+    name: "View Category",
+    component: ViewCategory,
   },
 
   {
