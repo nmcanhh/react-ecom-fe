@@ -1,7 +1,8 @@
 import Dashboard from "../components/admin/Dashboard";
-import Category from "../components/admin/Category";
-import ViewCategory from "../components/admin/ViewCategory";
-import EditCategory from "../components/admin/EditCategory";
+import Category from "../components/admin/category/Category";
+import ViewCategory from "../components/admin/category/ViewCategory";
+import EditCategory from "../components/admin/category/EditCategory";
+import AddProduct from "../components/admin/product/AddProduct";
 import Profile from "../components/admin/Profile";
 
 const routes = [
@@ -33,6 +34,12 @@ const routes = [
     exact: true,
     name: "Edit Category",
     component: EditCategory,
+  },
+  {
+    path: "/admin/add-product/",
+    exact: true,
+    name: "Add Product",
+    component: AddProduct,
   },
 
   {
